@@ -1,5 +1,10 @@
 <script setup>
-import { getCurrentInstance, onMounted, reactive, computed } from 'vue'
+import {
+  getCurrentInstance,
+  onMounted,
+  reactive,
+  computed,
+} from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import moment from 'moment'
 import {
@@ -31,7 +36,6 @@ onMounted(() => {
   const type = route.params.type
 })
 
-
 async function handleClickPublish() {
   if (state.showLoading) return
   if (!state.inputTitle) {
@@ -46,12 +50,16 @@ async function handleClickPublish() {
   state.inputTitle = ''
 }
 
-async function createPost(title, content, mediaId, tagIds, categoryIds) {
+async function createPost(
+  title,
+  content,
+  mediaId,
+  tagIds,
+  categoryIds
+) {
   try {
-    let postData = {
-    }
+    let postData = {}
     const res = await Api.post(URL.CREATE_POST, postData)
-    
   } catch (err) {
     showWarnMsg('创建失败, 请重试' + err.message)
   }
@@ -64,30 +72,87 @@ function showWarnMsg(text) {
 function showSuccessMsg(text) {
   message.success(text, { duration: 1000 })
 }
-
 </script>
 
 <template>
-  <div class="page-test">
+  <div class="page-detail">
     <n-spin :show="state.showLoading">
       <template #description>{{ state.loadingText }}</template>
-      <div :style="{opacity: state.showLoading ? 0.5: 1 }">
+      <div :style="{ opacity: state.showLoading ? 0.5 : 1 }">
+        <div class="info-wrap">
+          <img
+            class="avatar"
+            src="https://img2.baidu.com/it/u=2351401291,4078396716&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1663434000&t=6a06ccb31dfb1f7e82c3747ff95236ff"
+          />
+          <div class="info-item">
+            <span>姓名: 陈安然</span>
+            <span>有效期至：2022/12/31</span>
+          </div>
+          <div class="info-item">
+            <span>电话：16745282458</span>
+            <span>剩余时间：109天</span>
+          </div>
+          <div class="info-item">
+            <span>22锦绣华北,有效</span>
+          </div>
+          <div class="divider"></div>
+          <img
+            class="qrcode"
+            src="https://lanhu-dds-backend.oss-cn-beijing.aliyuncs.com/merge_image/imgs/681a6ccec2c94b778c2200163b10283b_mergeImage.png"/>
+          <div class="card-no">卡号：202266097505</div>
+        </div>
       </div>
     </n-spin>
   </div>
 </template>
 
 <style scoped>
-.page-test {
-  padding: 30px 10px;
+.page-detail {
+  padding: 14px 12px;
   overflow: auto;
   height: 100%;
+  background: #f8f8f8;
 }
-.input-title {
-  margin-top: 10px;
+.info-wrap {
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 14px 16px 33px;
 }
-.btn-submit {
-  margin-top: 10px;
-  width: 100%;
+.avatar {
+  display: block;
+  margin: 0 auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 20px;
+  margin-bottom: 4px;
+  color: #333333;
+}
+.divider {
+  margin: 30px 0;
+  height: 1px;
+  border: 1px solid #f7f7f7;
+}
+.qrcode {
+  display: block;
+  margin: 0 auto;
+  width: 144px;
+  height: 144px;
+  margin-bottom: 25px;
+}
+.card-no {
+  height: 17px;
+  line-height: 17px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #999999;
+  text-align: center;
 }
 </style>
