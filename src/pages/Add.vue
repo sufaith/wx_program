@@ -28,7 +28,15 @@ let HISTORY_KEY = ''
 const state = reactive({
   showLoading: false,
   loadingText: '',
-  inputTitle: '',
+  name: '',
+  avatar: '',
+  validTime: '',
+  phone: '',
+  remainTime: '',
+  otherInfo: '',
+  cardNo: '',
+  num: '',
+  qrcodeImg: '',
 })
 
 onMounted(() => {
@@ -83,28 +91,28 @@ function showSuccessMsg(text) {
           <div class="input-item">
             <span class="input-label">姓名</span>
             <div class="input-content">
-              <input placeholder="请输入姓名" />
+              <input placeholder="请输入姓名" v-model="state.name"/>
             </div>
           </div>
           <div class="divider"></div>
           <div class="input-item">
             <span class="input-label">卡号</span>
             <div class="input-content">
-              <input placeholder="请输入卡号" />
+              <input placeholder="请输入卡号"  v-model="state.cardNo"/>
             </div>
           </div>
           <div class="divider"></div>
           <div class="input-item">
             <span class="input-label">序列号</span>
             <div class="input-content">
-              <input placeholder="请输入序列号" maxlength="12"/>
+              <input placeholder="请输入序列号" maxlength="12" v-model="state.num"/>
             </div>
           </div>
           <div class="divider"></div>
            <div class="input-item">
             <span class="input-label">手机号</span>
             <div class="input-content">
-              <input placeholder="请输入手机号" maxlength="11"/>
+              <input placeholder="请输入手机号" maxlength="11"  v-model="state.phone"/>
             </div>
           </div>
           <div class="divider"></div>
