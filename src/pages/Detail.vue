@@ -3,18 +3,11 @@ import {
   getCurrentInstance,
   onMounted,
   reactive,
-  computed,
 } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import moment from 'moment'
 import {
-  NSpace,
-  NTag,
-  NInput,
-  NButton,
   useMessage,
-  NScrollbar,
-  NSpin,
 } from 'naive-ui'
 
 const { proxy } = getCurrentInstance()
@@ -22,8 +15,6 @@ const message = useMessage()
 
 const URL = proxy.$url
 const Api = proxy.$http
-const LocalStore = proxy.$localStore
-let HISTORY_KEY = ''
 
 const state = reactive({
   showLoading: false,
@@ -40,36 +31,15 @@ const state = reactive({
 
 onMounted(() => {
   const route = useRoute()
-  const type = route.params.type
+  fetchUserInfo()
 })
 
-async function handleClickPublish() {
+async function fetchUserInfo() {
   if (state.showLoading) return
-  if (!state.inputTitle) {
-    showWarnMsg('请输入XXX')
-    return
-  }
   state.showLoading = true
-  state.loadingText = '正在创建'
-  await createPost()
+  state.loadingText = '获取数据中'
+  const res = await Api.post(URL.CREATE_POST, postData)
   state.showLoading = false
-  showSuccessMsg('创建成功')
-  state.inputTitle = ''
-}
-
-async function createPost(
-  title,
-  content,
-  mediaId,
-  tagIds,
-  categoryIds
-) {
-  try {
-    let postData = {}
-    const res = await Api.post(URL.CREATE_POST, postData)
-  } catch (err) {
-    showWarnMsg('创建失败, 请重试' + err.message)
-  }
 }
 
 function showWarnMsg(text) {
