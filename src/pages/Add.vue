@@ -44,33 +44,98 @@ onMounted(() => {
   const type = route.params.type
 })
 
-async function handleClickPublish() {
+async function handleClickSave() {
   if (state.showLoading) return
-  if (!state.inputTitle) {
-    showWarnMsg('请输入XXX')
-    return
-  }
-  state.showLoading = true
-  state.loadingText = '正在创建'
-  await createPost()
-  state.showLoading = false
-  showSuccessMsg('创建成功')
-  state.inputTitle = ''
-}
-
-async function createPost(
-  title,
-  content,
-  mediaId,
-  tagIds,
-  categoryIds
-) {
   try {
+    if (!state.name) {
+      showWarnMsg('请输入姓名')
+      return
+    }
+    if (!checkChineseName(state.name)) {
+      return
+    }
+    if (!state.cardNo) {
+      showWarnMsg('请输入卡号')
+      return
+    }
+    if (state.cardNo.length < 12) {
+      showWarnMsg('卡号需为12位')
+      return
+    }
+    if (!state.num) {
+      showWarnMsg('请输入序列号')
+      return
+    }
+    if (!state.phone) {
+      showWarnMsg('请输入手机号')
+      return
+    }
+    if (state.phone.length < 11) {
+      showWarnMsg('请输入11位手机号')
+      return
+    }
+    if (!checkIsPhone(state.phone)) {
+      showWarnMsg('手机号格式不正确')
+      return
+    }
+    state.showLoading = true
+    state.loadingText = '提交中'
     let postData = {}
     const res = await Api.post(URL.CREATE_POST, postData)
   } catch (err) {
     showWarnMsg('创建失败, 请重试' + err.message)
   }
+  state.showLoading = false
+  showSuccessMsg('创建成功')
+}
+
+/**
+ * 校验姓名
+ */
+function checkChineseName(name) {
+  let reg = /^[\u4e00-\u9fa5]{2,15}$/
+  // 保留点后,用来校验的姓名,也是最终校验通过后返回的姓名
+  let payerName = name
+    .replaceAll('　', '')
+    .replaceAll(' ', '')
+    .replaceAll('•', '·')
+    .replaceAll('．', '·')
+  // 去除所有点后，用来校验的姓名
+  let checkName = name
+    .replaceAll('　', '')
+    .replaceAll(' ', '')
+    .replaceAll('•', '')
+    .replaceAll('．', '')
+    .replaceAll('·', '')
+  if (checkName.length === 1) {
+    showWarnMsg('姓名至少包含两位汉字，请修正')
+    return false
+  }
+  if (reg.test(checkName)) {
+    if (payerName.substring(0, 1) === '·') {
+      showWarnMsg('姓名第一位不能为【·】，请修正')
+      return false
+    }
+    if (payerName.substring(payerName.length - 1) === '·') {
+      showWarnMsg('姓名最后不能为【·】，请修正')
+      return false
+    }
+    if (payerName.indexOf('··') !== -1) {
+      showWarnMsg('姓名不能有连续的【·】，请修正')
+      return false
+    }
+    return payerName
+  } else {
+    showWarnMsg('姓名中只能包含【汉字】和【·】，请修正')
+    return false
+  }
+}
+
+/**
+ * 校验是否为手机号
+ */
+function checkIsPhone(str) {
+  return /^1([0-9])\d{9}$/.test(str)
 }
 
 function showWarnMsg(text) {
@@ -91,28 +156,48 @@ function showSuccessMsg(text) {
           <div class="input-item">
             <span class="input-label">姓名</span>
             <div class="input-content">
-              <input placeholder="请输入姓名" v-model="state.name"/>
+              <input
+                type="text"
+                placeholder="请输入姓名"
+                v-model="state.name"
+              />
             </div>
           </div>
           <div class="divider"></div>
           <div class="input-item">
             <span class="input-label">卡号</span>
             <div class="input-content">
-              <input placeholder="请输入卡号"  v-model="state.cardNo"/>
+              <input
+                type="text"
+                placeholder="请输入卡号"
+                v-model="state.cardNo"
+                maxlength="12"
+                oninput="value=value.replace(/[^0-9.]/g,'')"
+              />
             </div>
           </div>
           <div class="divider"></div>
           <div class="input-item">
             <span class="input-label">序列号</span>
             <div class="input-content">
-              <input placeholder="请输入序列号" maxlength="12" v-model="state.num"/>
+              <input
+                type="text"
+                placeholder="请输入序列号"
+                v-model="state.num"
+              />
             </div>
           </div>
           <div class="divider"></div>
-           <div class="input-item">
+          <div class="input-item">
             <span class="input-label">手机号</span>
             <div class="input-content">
-              <input placeholder="请输入手机号" maxlength="11"  v-model="state.phone"/>
+              <input
+                type="text"
+                placeholder="请输入手机号"
+                maxlength="11"
+                v-model="state.phone"
+                oninput="value=value.replace(/[^0-9.]/g,'')"
+              />
             </div>
           </div>
           <div class="divider"></div>
@@ -123,7 +208,9 @@ function showSuccessMsg(text) {
             <div class="img-placeholder"></div>
           </div>
         </div>
-        <div class="btn-submit">提交信息</div>
+        <div class="btn-submit" @click="handleClickSave">
+          提交信息
+        </div>
       </div>
     </n-spin>
   </div>
