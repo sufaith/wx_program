@@ -97,7 +97,14 @@ function showSuccessMsg(text) {
           <div class="input-item">
             <span class="input-label">序列号</span>
             <div class="input-content">
-              <input placeholder="请输入序列号" />
+              <input placeholder="请输入序列号" maxlength="12"/>
+            </div>
+          </div>
+          <div class="divider"></div>
+           <div class="input-item">
+            <span class="input-label">手机号</span>
+            <div class="input-content">
+              <input placeholder="请输入手机号" maxlength="11"/>
             </div>
           </div>
           <div class="divider"></div>
