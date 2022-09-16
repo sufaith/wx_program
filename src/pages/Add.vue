@@ -1,20 +1,10 @@
 <script setup>
 import {
   getCurrentInstance,
-  onMounted,
   reactive,
-  computed,
 } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import moment from 'moment'
 import {
-  NSpace,
-  NTag,
-  NInput,
-  NButton,
   useMessage,
-  NScrollbar,
-  NSpin,
 } from 'naive-ui'
 
 const { proxy } = getCurrentInstance()
@@ -22,8 +12,6 @@ const message = useMessage()
 
 const URL = proxy.$url
 const Api = proxy.$http
-const LocalStore = proxy.$localStore
-let HISTORY_KEY = ''
 
 const state = reactive({
   showLoading: false,
@@ -37,11 +25,6 @@ const state = reactive({
   cardNo: '',
   num: '',
   qrcodeImg: '',
-})
-
-onMounted(() => {
-  const route = useRoute()
-  const type = route.params.type
 })
 
 async function handleClickSave() {
@@ -219,7 +202,7 @@ function showSuccessMsg(text) {
 </script>
 
 <template>
-  <div class="page-test">
+  <div class="page-add">
     <n-spin :show="state.showLoading">
       <template #description>{{ state.loadingText }}</template>
       <div :style="{ opacity: state.showLoading ? 0.5 : 1 }">
@@ -304,7 +287,7 @@ function showSuccessMsg(text) {
 </template>
 
 <style scoped>
-.page-test {
+.page-add {
   padding: 30px 10px;
   overflow: auto;
   height: 100%;
