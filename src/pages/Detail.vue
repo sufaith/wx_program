@@ -28,7 +28,14 @@ let HISTORY_KEY = ''
 const state = reactive({
   showLoading: false,
   loadingText: '',
-  inputTitle: '',
+  name: '陈安然',
+  avatar: 'https://img2.baidu.com/it/u=2351401291,4078396716&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1663434000&t=6a06ccb31dfb1f7e82c3747ff95236ff',
+  validTime: '2022/12/31',
+  phone: '16745282458',
+  remainTime: '109天',
+  otherInfo: '22锦绣华北,有效',
+  cardNo: '202266097505',
+  qrcodeImg: 'https://lanhu-dds-backend.oss-cn-beijing.aliyuncs.com/merge_image/imgs/681a6ccec2c94b778c2200163b10283b_mergeImage.png',
 })
 
 onMounted(() => {
@@ -82,24 +89,24 @@ function showSuccessMsg(text) {
         <div class="info-wrap">
           <img
             class="avatar"
-            src="https://img2.baidu.com/it/u=2351401291,4078396716&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1663434000&t=6a06ccb31dfb1f7e82c3747ff95236ff"
+            :src="state.avatar"
           />
           <div class="info-item">
-            <span>姓名: 陈安然</span>
-            <span>有效期至：2022/12/31</span>
+            <span>姓名: {{state.name}}</span>
+            <span>有效期至：{{state.validTime}}</span>
           </div>
           <div class="info-item">
-            <span>电话：16745282458</span>
-            <span>剩余时间：109天</span>
+            <span>电话：{{state.phone}}</span>
+            <span>剩余时间：{{state.remainTime}}</span>
           </div>
           <div class="info-item">
-            <span>22锦绣华北,有效</span>
+            <span>{{state.otherInfo}}</span>
           </div>
           <div class="divider"></div>
           <img
             class="qrcode"
-            src="https://lanhu-dds-backend.oss-cn-beijing.aliyuncs.com/merge_image/imgs/681a6ccec2c94b778c2200163b10283b_mergeImage.png"/>
-          <div class="card-no">卡号：202266097505</div>
+            :src="state.qrcodeImg"/>
+          <div class="card-no">卡号：{{state.cardNo}}</div>
         </div>
       </div>
     </n-spin>
