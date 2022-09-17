@@ -72,7 +72,11 @@ async function handleClickSave() {
     }
     const res = await Api.post('/showcard', postData)
     state.showLoading = false
-    showSuccessMsg('创建成功')
+    if (res.data.code !== 2000) {
+      showWarnMsg('服务异常')
+      return
+    }
+    showSuccessMsg('提交成功')
     const userInfo = {
       name: state.name,
       phone: state.phone,
@@ -88,7 +92,7 @@ async function handleClickSave() {
     LocalStore.set(USER_INFO_KEY, userInfo)
     router.push({ name: 'detail' })
   } catch (err) {
-    showWarnMsg('创建失败, 请重试' + err.message)
+    showWarnMsg('提交失败, 请重试' + err.message)
   }
   
 }

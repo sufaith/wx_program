@@ -4,8 +4,6 @@ import {
   onMounted,
   reactive,
 } from 'vue'
-import { useRoute } from 'vue-router'
-import moment from 'moment'
 import {
   useMessage,
 } from 'naive-ui'
@@ -41,6 +39,8 @@ async function fetchUserInfo() {
   state.showLoading = true
   state.loadingText = '获取数据中'
   state.userInfo = LocalStore.get(USER_INFO_KEY, {})
+  state.userInfo.validity = `${state.userInfo.validity}/12/31`
+  state.userInfo.otherInfo = '22锦绣华北, 有效'
   console.log()
   state.showLoading = false
 }
@@ -70,7 +70,7 @@ function showSuccessMsg(text) {
           </div>
           <div class="info-item">
             <span>电话：{{state.userInfo.phone}}</span>
-            <span>剩余时间：{{state.userInfo.remainTime}}</span>
+            <span>剩余时间：{{state.userInfo.days}}天</span>
           </div>
           <div class="info-item">
             <span>{{state.userInfo.otherInfo}}</span>
