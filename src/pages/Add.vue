@@ -18,11 +18,11 @@ const USER_INFO_KEY = 'USER_INFO'
 const state = reactive({
   showLoading: false,
   loadingText: '',
-  name: '汉字', // 姓名
-  phone: '13938281250', // 手机号
-  cardID: '111111111111', // 卡号
-  num: '123456hbasdas123134asdasda321', // 序列号
-  photo: '1111111', // 头像
+  name: '', // 姓名
+  phone: '', // 手机号
+  cardID: '', // 卡号
+  num: '', // 序列号
+  photo: '', // 头像
   img: '', // 二维码图片
   validity: '', // 有效期
 })
