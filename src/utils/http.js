@@ -2,9 +2,11 @@ import axios from 'axios'
 import qs from 'qs'
 import LocalStore from '@/utils/localStore'
 
-axios.defaults.baseURL = 'http://212.64.13.141:8898'
-axios.defaults.headers['Content-type'] =
-  'application/x-www-form-urlencoded;charset=UTF-8'
+axios.defaults.baseURL = 'http://212.64.13.141:8899'
+// axios.defaults.headers['Content-type'] =
+//   'application/x-www-form-urlencoded;charset=UTF-8'
+
+axios.defaults.headers['Content-type'] = 'application/json'
 
 //设置超时
 axios.defaults.timeout = 300000
@@ -39,7 +41,8 @@ export default {
       axios({
         method: 'post',
         url,
-        data: qs.stringify(data),
+        // data: qs.stringify(data),
+        data,
       })
         .then((res) => {
           resolve(res)

@@ -3,10 +3,12 @@ import {
   getCurrentInstance,
   reactive,
 } from 'vue'
+import { useRouter } from 'vue-router'
 import {
   useMessage,
 } from 'naive-ui'
 
+const router = useRouter()
 const message = useMessage()
 const { proxy } = getCurrentInstance()
 const Api = proxy.$http
@@ -16,11 +18,11 @@ const USER_INFO_KEY = 'USER_INFO'
 const state = reactive({
   showLoading: false,
   loadingText: '',
-  name: '', // 姓名
-  phone: '', // 手机号
-  cardID: '', // 卡号
+  name: '汉字', // 姓名
+  phone: '13938281250', // 手机号
+  cardID: '111111111111', // 卡号
   num: '123456hbasdas123134asdasda321', // 序列号
-  photo: '', // 头像
+  photo: '1111111', // 头像
   img: '', // 二维码图片
   validity: '', // 有效期
 })
@@ -74,14 +76,16 @@ async function handleClickSave() {
       num: state.num,
     }
     const res = await Api.post('/showcard', postData)
-    console.log(res)
+    state.showLoading = false
+    showSuccessMsg('创建成功')
+    const userInfo = {...postData, img: res.data.img, validity: res.data.validity, days: res.data.days}
+    console.log('userInfo', userInfo)
+    LocalStore.set(USER_INFO_KEY, userInfo)
+    router.push({ name: 'detail' })
   } catch (err) {
     showWarnMsg('创建失败, 请重试' + err.message)
   }
-  state.showLoading = false
-  showSuccessMsg('创建成功')
-  LocalStore.set(USER_INFO_KEY, {...postData, ...res.data})
-  router.push({ name: 'detail' })
+  
 }
 
 /**

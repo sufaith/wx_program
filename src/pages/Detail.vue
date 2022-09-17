@@ -26,13 +26,13 @@ const state = reactive({
     photo: '', // 头像
     img: '', // 二维码图片
     validity: '', // 有效期
+    days: '', // 剩余天数
     otherInfo: '',
     remainTime: '',
   }
 })
 
 onMounted(() => {
-  const route = useRoute()
   fetchUserInfo()
 })
 
@@ -41,6 +41,7 @@ async function fetchUserInfo() {
   state.showLoading = true
   state.loadingText = '获取数据中'
   state.userInfo = LocalStore.get(USER_INFO_KEY, {})
+  console.log()
   state.showLoading = false
 }
 
