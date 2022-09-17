@@ -2,12 +2,6 @@ const routes = [
   {
     path: '/',
     name: 'index',
-    meta: { title: '首页' },
-    component: () => import('@/pages/Index.vue'),
-  },
-  {
-    path: '/add',
-    name: 'add',
     meta: { title: '添加信息' },
     component: () => import('@/pages/Add.vue'),
   },
