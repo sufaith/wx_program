@@ -2,12 +2,12 @@ import axios from 'axios'
 import qs from 'qs'
 import LocalStore from '@/utils/localStore'
 
-axios.defaults.baseURL = ''
+axios.defaults.baseURL = 'http://212.64.13.141:8898'
 axios.defaults.headers['Content-type'] =
   'application/x-www-form-urlencoded;charset=UTF-8'
 
 //设置超时
-axios.defaults.timeout = 10000
+axios.defaults.timeout = 300000
 
 axios.interceptors.request.use(
   (config) => {

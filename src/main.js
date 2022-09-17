@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import http from './utils/http'
-import url from './utils/url'
 import localStore from './utils/localStore'
 import App from './App.vue'
 import router from './router/index'
@@ -16,6 +15,5 @@ router.beforeEach((to, from, next) => {
 const app = createApp(App)
 app.use(router)
 app.config.globalProperties.$http = http
-app.config.globalProperties.$url = url
 app.config.globalProperties.$localStore = localStore
 app.mount('#app')

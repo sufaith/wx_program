@@ -10,23 +10,25 @@ import {
   useMessage,
 } from 'naive-ui'
 
-const { proxy } = getCurrentInstance()
 const message = useMessage()
-
-const URL = proxy.$url
-const Api = proxy.$http
+const { proxy } = getCurrentInstance()
+const LocalStore = proxy.$localStore
+const USER_INFO_KEY = 'USER_INFO'
 
 const state = reactive({
   showLoading: false,
   loadingText: '',
-  name: '陈安然',
-  avatar: 'https://img2.baidu.com/it/u=2351401291,4078396716&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1663434000&t=6a06ccb31dfb1f7e82c3747ff95236ff',
-  validTime: '2022/12/31',
-  phone: '16745282458',
-  remainTime: '109天',
-  otherInfo: '22锦绣华北,有效',
-  cardNo: '202266097505',
-  qrcodeImg: 'https://lanhu-dds-backend.oss-cn-beijing.aliyuncs.com/merge_image/imgs/681a6ccec2c94b778c2200163b10283b_mergeImage.png',
+  userInfo: {
+    name: '', // 姓名
+    phone: '', // 手机号
+    cardID: '', // 卡号
+    num: '', // 序列号
+    photo: '', // 头像
+    img: '', // 二维码图片
+    validity: '', // 有效期
+    otherInfo: '',
+    remainTime: '',
+  }
 })
 
 onMounted(() => {
@@ -35,10 +37,10 @@ onMounted(() => {
 })
 
 async function fetchUserInfo() {
-  if (state.showLoading) return
+  if (state.userInfo.showLoading) return
   state.showLoading = true
   state.loadingText = '获取数据中'
-  const res = await Api.post(URL.CREATE_POST, postData)
+  state.userInfo = LocalStore.get(USER_INFO_KEY, {})
   state.showLoading = false
 }
 
@@ -59,24 +61,24 @@ function showSuccessMsg(text) {
         <div class="info-wrap">
           <img
             class="avatar"
-            :src="state.avatar"
+            :src="state.userInfo.photo"
           />
           <div class="info-item">
-            <span>姓名: {{state.name}}</span>
-            <span>有效期至：{{state.validTime}}</span>
+            <span>姓名: {{state.userInfo.name}}</span>
+            <span>有效期至：{{state.userInfo.validity}}</span>
           </div>
           <div class="info-item">
-            <span>电话：{{state.phone}}</span>
-            <span>剩余时间：{{state.remainTime}}</span>
+            <span>电话：{{state.userInfo.phone}}</span>
+            <span>剩余时间：{{state.userInfo.remainTime}}</span>
           </div>
           <div class="info-item">
-            <span>{{state.otherInfo}}</span>
+            <span>{{state.userInfo.otherInfo}}</span>
           </div>
           <div class="divider"></div>
           <img
             class="qrcode"
-            :src="state.qrcodeImg"/>
-          <div class="card-no">卡号：{{state.cardNo}}</div>
+            :src="state.userInfo.img"/>
+          <div class="card-no">卡号：{{state.userInfo.cardID}}</div>
         </div>
       </div>
     </n-spin>

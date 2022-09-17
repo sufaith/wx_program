@@ -7,24 +7,22 @@ import {
   useMessage,
 } from 'naive-ui'
 
-const { proxy } = getCurrentInstance()
 const message = useMessage()
-
-const URL = proxy.$url
+const { proxy } = getCurrentInstance()
 const Api = proxy.$http
+const LocalStore = proxy.$localStore
+const USER_INFO_KEY = 'USER_INFO'
 
 const state = reactive({
   showLoading: false,
   loadingText: '',
-  name: '',
-  avatar: '',
-  validTime: '',
-  phone: '',
-  remainTime: '',
-  otherInfo: '',
-  cardNo: '',
-  num: '',
-  qrcodeImg: '',
+  name: '', // 姓名
+  phone: '', // 手机号
+  cardID: '', // 卡号
+  num: '123456hbasdas123134asdasda321', // 序列号
+  photo: '', // 头像
+  img: '', // 二维码图片
+  validity: '', // 有效期
 })
 
 async function handleClickSave() {
@@ -37,11 +35,11 @@ async function handleClickSave() {
     if (!checkChineseName(state.name)) {
       return
     }
-    if (!state.cardNo) {
+    if (!state.cardID) {
       showWarnMsg('请输入卡号')
       return
     }
-    if (state.cardNo.length < 12) {
+    if (state.cardID.length < 12) {
       showWarnMsg('卡号需为12位')
       return
     }
@@ -61,19 +59,29 @@ async function handleClickSave() {
       showWarnMsg('手机号格式不正确')
       return
     }
-    if (!state.avatar) {
+    if (!state.photo) {
       showWarnMsg('请上传头像')
       return
     }
     state.showLoading = true
     state.loadingText = '提交中'
-    let postData = {}
-    const res = await Api.post(URL.CREATE_POST, postData)
+    let postData = {
+      // name: state.name,
+      // phone: state.phone,
+      // cardID: state.cardID,
+      // num: state.num,
+      // photo: state.photo,
+      num: state.num,
+    }
+    const res = await Api.post('/showcard', postData)
+    console.log(res)
   } catch (err) {
     showWarnMsg('创建失败, 请重试' + err.message)
   }
   state.showLoading = false
   showSuccessMsg('创建成功')
+  LocalStore.set(USER_INFO_KEY, {...postData, ...res.data})
+  router.push({ name: 'detail' })
 }
 
 /**
@@ -96,7 +104,7 @@ async function handleChangeFile(e) {
     console.log('imgUrl', imgUrl)
     const base64 = await convertUrlToBase64(imgUrl)
     console.log('base64', base64)
-    state.avatar = base64.dataURL
+    state.photo = base64.dataURL
   }
 }
 
@@ -224,7 +232,7 @@ function showSuccessMsg(text) {
               <input
                 type="text"
                 placeholder="请输入卡号"
-                v-model="state.cardNo"
+                v-model="state.cardID"
                 maxlength="12"
                 oninput="value=value.replace(/[^0-9.]/g,'')"
               />
@@ -261,14 +269,14 @@ function showSuccessMsg(text) {
           <div class="img-wrap">
             <div
               class="img-placeholder"
-              v-if="!state.avatar"
+              v-if="!state.photo"
             ></div>
             <img
               class="img-avatar"
-              v-if="state.avatar"
-              :src="state.avatar"
+              v-if="state.photo"
+              :src="state.photo"
             />
-            <div class="img-tip" v-if="state.avatar"></div>
+            <div class="img-tip" v-if="state.photo"></div>
             <input
               class="input-file"
               type="file"
