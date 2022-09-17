@@ -115,9 +115,10 @@ async function handleChangeFile(e) {
     }
     const imgUrl = getObjectURL(file)
     console.log('imgUrl', imgUrl)
-    const base64 = await convertUrlToBase64(imgUrl)
-    console.log('base64', base64)
-    state.photo = base64.dataURL
+    // const base64 = await convertUrlToBase64(imgUrl)
+    // console.log('base64', base64)
+    // state.photo = base64.dataURL
+    state.photo = imgUrl
   }
 }
 
