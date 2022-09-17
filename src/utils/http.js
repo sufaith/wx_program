@@ -2,8 +2,9 @@ import axios from 'axios'
 import qs from 'qs'
 import LocalStore from '@/utils/localStore'
 
-axios.defaults.baseURL = 'http://140.210.90.56:8898'
-// axios.defaults.baseURL = 'http://0.0.0.0:8898'
+// axios.defaults.baseURL = 'http://140.210.90.56:8898'
+axios.defaults.baseURL = 'http://212.64.13.141:8899'
+// axios.defaults.baseURL = 'http://127.0.0.1:8898'
 // axios.defaults.headers['Content-type'] =
 //   'application/x-www-form-urlencoded;charset=UTF-8'
 
