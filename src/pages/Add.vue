@@ -335,7 +335,7 @@ function showSuccessMsg(text) {
 .input-label {
   display: inline-block;
   color: #333333;
-  width: 60px;
+  width: 70px;
   height: 21px;
   line-height: 21px;
   text-align: left;
@@ -351,6 +351,7 @@ function showSuccessMsg(text) {
   border: 0;
   outline: none;
   background: transparent;
+  font-size: 14px;
 }
 .input-content input::-webkit-input-placeholder {
   color: #b8b8b8;
