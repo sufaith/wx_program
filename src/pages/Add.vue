@@ -68,17 +68,22 @@ async function handleClickSave() {
     state.showLoading = true
     state.loadingText = '提交中'
     let postData = {
-      // name: state.name,
-      // phone: state.phone,
-      // cardID: state.cardID,
-      // num: state.num,
-      // photo: state.photo,
       num: state.num,
     }
     const res = await Api.post('/showcard', postData)
     state.showLoading = false
     showSuccessMsg('创建成功')
-    const userInfo = {...postData, img: res.data.img, validity: res.data.validity, days: res.data.days}
+    const userInfo = {
+      name: state.name,
+      phone: state.phone,
+      cardID: state.cardID,
+      num: state.num,
+      photo: state.photo,
+      num: state.num,
+      img: res.data.img,
+      validity: res.data.validity,
+      days: res.data.days,
+    }
     console.log('userInfo', userInfo)
     LocalStore.set(USER_INFO_KEY, userInfo)
     router.push({ name: 'detail' })
