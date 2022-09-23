@@ -7,11 +7,12 @@ import {
 import {
   useMessage,
 } from 'naive-ui'
+import { useRouter } from 'vue-router'
 
 const message = useMessage()
 const { proxy } = getCurrentInstance()
-const LocalStore = proxy.$localStore
-const USER_INFO_KEY = 'USER_INFO'
+import base64 from '../utils/base64'
+const router = useRouter()
 
 const state = reactive({
   showLoading: false,
@@ -36,6 +37,8 @@ onMounted(() => {
 
 async function fetchUserInfo() {
   if (state.userInfo.showLoading) return
+  const base64Id = router.params.id
+  const userId = base64.decode(base64Id)
   state.showLoading = true
   state.loadingText = '获取数据中'
   state.userInfo = LocalStore.get(USER_INFO_KEY, {})

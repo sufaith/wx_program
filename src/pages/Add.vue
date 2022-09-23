@@ -12,9 +12,8 @@ const router = useRouter()
 const message = useMessage()
 const { proxy } = getCurrentInstance()
 const Api = proxy.$http
-const LocalStore = proxy.$localStore
-const USER_INFO_KEY = 'USER_INFO'
 import imgUtil from '../utils/image'
+import base64 from '../utils/base64'
 
 const state = reactive({
   showLoading: false,
@@ -69,29 +68,21 @@ async function handleClickSave() {
     state.showLoading = true
     state.loadingText = '提交中'
     let postData = {
-      num: state.num,
-    }
-    const res = await Api.post('/showcard', postData)
-    state.showLoading = false
-    if (res.data.code !== 2000) {
-      showWarnMsg('服务异常')
-      return
-    }
-    showSuccessMsg('提交成功')
-    const userInfo = {
       name: state.name,
-      phone: state.phone,
       cardID: state.cardID,
       num: state.num,
+      phone: state.phone,
       photo: state.photo,
-      num: state.num,
-      img: res.data.img,
-      validity: res.data.validity,
-      days: res.data.days,
     }
-    console.log('userInfo', userInfo)
-    LocalStore.set(USER_INFO_KEY, userInfo)
-    router.push({ name: 'detail' })
+    const res = await Api.post('/savecard', postData)
+    state.showLoading = false
+    if (res.data.code !== 2000 || !res.data.id) {
+      showWarnMsg(res.data.msg || '保存异常, 请重试')
+      return
+    }
+    showSuccessMsg('保存成功')
+    console.log(`id=${res.data.id}, base64Id=${base64.encode(res.data.id)}`)
+    router.push({ name: 'detail', params: base64.encode(res.data.id) })
   } catch (err) {
     showWarnMsg('提交失败, 请重试' + err.message)
   }
@@ -121,49 +112,6 @@ async function handleChangeFile(e) {
       console.log('压缩失败' + err.message || '')
     })
   }
-}
-
-/**
- * 获取图片url
- */
-function getObjectURL(file) {
-  const URL = window.URL || window.webkitURL || window.mozURL
-  return URL.createObjectURL(file)
-}
-
-/**
- * 图片URL转base64
- */
-function convertUrlToBase64(imgUrl) {
-  return new Promise(function(resolve, reject) {
-    const img = new Image()
-    img.crossOrigin = 'Anonymous'
-    img.src = imgUrl
-    img.onload = function() {
-      const canvas = document.createElement('canvas')
-      canvas.width = img.width
-      canvas.height = img.height
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(img, 0, 0, img.width, img.height)
-      const startIndex = imgUrl.lastIndexOf('.')
-      let ext = 'png'
-      if (startIndex > -1) {
-        const x = imgUrl.substring(startIndex + 1).toLowerCase()
-        const arr = ['png', 'jpg', 'jpeg', 'gif']
-        if (arr.indexOf(x) > -1) {
-          ext = x
-        }
-      }
-      let type = ext === 'jpg' ? 'image/jpeg' : 'image/png'
-      const dataURL = canvas.toDataURL(type)
-      const base64 = {
-        dataURL: dataURL,
-        type: type,
-        ext: ext
-      }
-      resolve(base64)
-    }
-  })
 }
 
 /**

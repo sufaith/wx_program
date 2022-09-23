@@ -6,7 +6,7 @@ const routes = [
     component: () => import('@/pages/Add.vue'),
   },
   {
-    path: '/detail',
+    path: '/detail/:id',
     name: 'detail',
     meta: { title: '信息详情' },
     component: () => import('@/pages/Detail.vue'),

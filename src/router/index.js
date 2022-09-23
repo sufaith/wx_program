@@ -4,7 +4,7 @@ import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router
 import routes from './routes'
 // 配置router对象
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes
 })
 export default router
