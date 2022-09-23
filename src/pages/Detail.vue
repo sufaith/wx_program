@@ -7,12 +7,13 @@ import {
 import {
   useMessage,
 } from 'naive-ui'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 const message = useMessage()
 const { proxy } = getCurrentInstance()
-import base64 from '../utils/base64'
-const router = useRouter()
+const Api = proxy.$http
+import { Base64 } from 'js-base64'
+const route = useRoute()
 
 const state = reactive({
   showLoading: false,
@@ -37,14 +38,18 @@ onMounted(() => {
 
 async function fetchUserInfo() {
   if (state.userInfo.showLoading) return
-  const base64Id = router.params.id
-  const userId = base64.decode(base64Id)
+  const base64Id = route.params.id || ''
+  const userId = Base64.decode(base64Id)
   state.showLoading = true
   state.loadingText = '获取数据中'
-  state.userInfo = LocalStore.get(USER_INFO_KEY, {})
+  const res = await Api.post('/showcard', { keyID: userId })
+  if (res.data.code !== 2000) {
+    showWarnMsg(res.data.msg)
+    return
+  }
+  state.userInfo = res.data
   state.userInfo.validity = `${state.userInfo.validity}/12/31`
   state.userInfo.otherInfo = '22锦绣华北, 有效'
-  console.log()
   state.showLoading = false
 }
 
@@ -64,6 +69,7 @@ function showSuccessMsg(text) {
       <div :style="{ opacity: state.showLoading ? 0.5 : 1 }">
         <div class="info-wrap">
           <img
+            v-show="state.userInfo.photo"
             class="avatar"
             :src="state.userInfo.photo"
           />
@@ -80,6 +86,7 @@ function showSuccessMsg(text) {
           </div>
           <div class="divider"></div>
           <img
+            v-show="state.userInfo.img"
             class="qrcode"
             :src="state.userInfo.img"/>
           <div class="card-no">卡号：{{state.userInfo.cardID}}</div>

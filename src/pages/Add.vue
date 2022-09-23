@@ -13,7 +13,7 @@ const message = useMessage()
 const { proxy } = getCurrentInstance()
 const Api = proxy.$http
 import imgUtil from '../utils/image'
-import base64 from '../utils/base64'
+import { Base64 } from 'js-base64'
 
 const state = reactive({
   showLoading: false,
@@ -75,14 +75,16 @@ async function handleClickSave() {
       photo: state.photo,
     }
     const res = await Api.post('/savecard', postData)
+    console.log(res)
     state.showLoading = false
     if (res.data.code !== 2000 || !res.data.id) {
       showWarnMsg(res.data.msg || '保存异常, 请重试')
       return
     }
     showSuccessMsg('保存成功')
-    console.log(`id=${res.data.id}, base64Id=${base64.encode(res.data.id)}`)
-    router.push({ name: 'detail', params: base64.encode(res.data.id) })
+    const base64Id = Base64.encode(res.data.id + '', true)
+    console.log(`id=${res.data.id}, base64Id=${base64Id}`)
+    router.push({ name: 'detail', params: { id: base64Id } })
   } catch (err) {
     showWarnMsg('提交失败, 请重试' + err.message)
   }
