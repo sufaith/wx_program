@@ -14,6 +14,7 @@ const { proxy } = getCurrentInstance()
 const Api = proxy.$http
 const LocalStore = proxy.$localStore
 const USER_INFO_KEY = 'USER_INFO'
+import imgUtil from '../utils/image'
 
 const state = reactive({
   showLoading: false,
@@ -113,12 +114,12 @@ async function handleChangeFile(e) {
       showWarnMsg('图片大小不能超过10M')
       return
     }
-    const imgUrl = getObjectURL(file)
-    console.log('imgUrl', imgUrl)
-    // const base64 = await convertUrlToBase64(imgUrl)
-    // console.log('base64', base64)
-    // state.photo = base64.dataURL
-    state.photo = imgUrl
+    imgUtil.compress(file, 2048).then(res => {
+      console.log('compressBase64', res.compressBase64)
+      state.photo = res.compressBase64
+    }).catch(err => {
+      console.log('压缩失败' + err.message || '')
+    })
   }
 }
 
